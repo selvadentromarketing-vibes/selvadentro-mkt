@@ -1,0 +1,23 @@
+# OS noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Netlify CLI
+.netlify/
+
+# Node (defensive — no build step)
+node_modules/
+
+# Editor
+.vscode/
+.idea/
+*.swp

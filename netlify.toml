@@ -1,0 +1,15 @@
+# Netlify config — mkt.selvadentrotulum.com
+# Generador interno de landing pages, protegido por basic auth vía edge function.
+
+[build]
+  publish = "."
+  edge_functions = "netlify/edge-functions"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # Impide que buscadores lo indexen aunque descubran el subdominio.
+    X-Robots-Tag = "noindex, nofollow"
