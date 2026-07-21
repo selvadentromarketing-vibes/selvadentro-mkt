@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Generador de Landing Pages — Selvadentro Tulum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Cardo:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
     color-scheme: light;
-    --gold:#B8935A; --gold-dark:#9c7c46;
+    --gold:#CF8543; --gold-dark:#b7743a;
     --ui-bg:#1f241c; --ui-panel:#2a3025; --ui-line:#3c4434; --ui-text:#e9e6dd; --ui-muted:#a8ad9c;
     --font:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   }
@@ -28,7 +28,7 @@
   .tpl:hover{border-color:var(--gold)}
   .tpl.active{border-color:var(--gold);background:#2f3627;box-shadow:0 0 0 1px var(--gold)}
   .tpl .dot{width:36px;height:36px;border-radius:8px;flex:none;position:relative;overflow:hidden}
-  .tpl .dot::after{content:"";position:absolute;right:0;bottom:0;width:14px;height:14px;background:rgba(255,255,255,.35)}
+  .tpl .dot::after{content:"";position:absolute;right:0;bottom:0;width:14px;height:14px;background:var(--gold)}
   .tpl .t-name{font-size:13.5px;font-weight:600}
   .tpl .t-desc{font-size:11px;color:var(--ui-muted);margin-top:2px;line-height:1.4}
   .tpl .t-tags{font-size:10px;color:var(--gold);margin-top:3px;letter-spacing:.4px;text-transform:uppercase}
@@ -52,9 +52,9 @@
   .vars{display:flex;flex-direction:column;gap:9px;margin-top:12px}
   .var{border:1px solid var(--ui-line);background:#1c2018;border-radius:10px;padding:12px}
   .var .tone{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#1f1a10;background:var(--gold);padding:2px 8px;border-radius:999px;margin-bottom:8px}
-  .var .v-t{font-size:13px;font-weight:600;line-height:1.3}
+  .var .v-t{font-size:13px;font-weight:600;line-height:1.3;font-family:'Cardo',serif}
   .var .v-s{font-size:12px;color:#cdd2c4;margin-top:4px;line-height:1.4}
-  .var .v-p{font-size:11.5px;color:var(--ui-muted);margin-top:4px;line-height:1.4}
+  .var .v-b{font-size:11.5px;color:var(--ui-muted);margin-top:4px;line-height:1.4}
   .var .v-use{margin-top:9px;font-size:11.5px;font-weight:600;color:var(--gold);background:none;border:1px solid var(--ui-line);border-radius:8px;padding:6px 10px;cursor:pointer;font-family:var(--font)}
   .var .v-use:hover{border-color:var(--gold)}
   .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(31,26,16,.35);border-top-color:#1f1a10;border-radius:50%;animation:sp .7s linear infinite}
@@ -86,7 +86,7 @@
   <aside class="panel">
     <div class="panel-head">
       <h1>Generador de Landing Pages</h1>
-      <p>Elige una plantilla, edita el copy del hero (o genéralo con IA) y exporta tu nueva LP.</p>
+      <p>3 plantillas basadas en el formato de <code style="color:var(--gold)">/premium</code>. Elige plantilla, edita el copy y exporta.</p>
     </div>
     <div class="panel-body">
       <div class="section">
@@ -96,7 +96,12 @@
       <div class="section">
         <span class="label">2 · Copy del hero</span>
         <div class="field">
-          <label>Título</label>
+          <label>Eyebrow <span class="hint">(texto pequeño, dorado)</span></label>
+          <input class="tin" id="inEyebrow" oninput="onEdit()">
+          <div class="count" id="cEyebrow"></div>
+        </div>
+        <div class="field">
+          <label>Título <span class="hint">(Cardo serif)</span></label>
           <textarea class="tin" id="inTitle" rows="2" oninput="onEdit()"></textarea>
           <div class="count" id="cTitle"></div>
         </div>
@@ -106,9 +111,12 @@
           <div class="count" id="cSub"></div>
         </div>
         <div class="field">
-          <label>Texto principal</label>
-          <textarea class="tin" id="inMain" rows="3" oninput="onEdit()"></textarea>
-          <div class="count" id="cMain"></div>
+          <label>Bullets <span class="hint">(una línea por bullet, máx 4)</span></label>
+          <textarea class="tin" id="inBullets" rows="4" oninput="onEdit()"></textarea>
+        </div>
+        <div class="field">
+          <label>CTA <span class="hint">(texto del botón)</span></label>
+          <input class="tin" id="inCta" oninput="onEdit()">
         </div>
       </div>
       <div class="section">
@@ -129,7 +137,7 @@
           <button class="btn btn-gold" onclick="download()">⬇ Descargar HTML</button>
           <button class="btn btn-ghost" onclick="showCode()">&lt;/&gt; Copiar código</button>
         </div>
-        <p class="foot-note">El resto de secciones (formulario, estadísticas, testimonios, trayectoria y CTA) se mantienen fijas y se adaptan a la paleta de cada plantilla.</p>
+        <p class="foot-note">El resto de secciones (VSL, formulario 6 campos, trust strip 20+/12/100%, testimonios, JJF Creando, closing CTA y footer) se mantienen fijas y adaptan la paleta de cada plantilla.</p>
       </div>
     </div>
   </aside>
@@ -159,201 +167,458 @@
 const A = "https://lotes.selvadentrotulum.com";
 const LOGO = A + "/logo-selvandentro_tulum-cream.webp";
 const HERO_IMG = A + "/hero-selvandentro_tulum.webp";
+const JJF_LOGO = A + "/development_company_logo-jjf_creando.webp";
+const TESTI_1 = A + "/testimonials/ricardo-garza.webp";
+const TESTI_2 = A + "/testimonials/shawn.webp";
+const WISTIA_ID = "jn8el9or7a";
 
-// 3 mezclas, todas con la paleta de marca Selvadentro (verde, olivo, crema, beige, dorado)
+// 3 paletas de marca Selvadentro
 const PALETTES = {
-  // Mezcla 1: verde inmersivo con foto de fondo, acento olivo, eyebrow arena
-  selva:  {heroStyle:"image", heroBg:"#465241", overlay:"rgba(35,47,38,.82)", statBg:"#465241", dark:"#38412f", accent:"#65713F", accentD:"#566034", eyebrow:"#d8c9a6", cream:"#F8F5EF", beige:"#ECE5D8", ink:"#2b2b26", muted:"#6f7268", swatch:"#465241"},
-  // Mezcla 2: hero claro crema/beige, bandas olivo, botones verde
-  arena:  {heroStyle:"light", heroBg:"#ECE5D8", overlay:"", statBg:"#65713F", dark:"#38412f", accent:"#465241", accentD:"#38412f", eyebrow:"#65713F", cream:"#F8F5EF", beige:"#f2ede3", ink:"#2b2b26", muted:"#6f7268", swatch:"#ECE5D8"},
-  // Mezcla 3: hero olivo sólido, acentos dorados, bandas verde oscuro
-  bosque: {heroStyle:"solid", heroBg:"#65713F", overlay:"rgba(56,65,47,.35)", statBg:"#38412f", dark:"#38412f", accent:"#B8935A", accentD:"#9c7c46", eyebrow:"#efe6d2", cream:"#F8F5EF", beige:"#ECE5D8", ink:"#2b2b26", muted:"#6f7268", swatch:"#65713F"}
+  // Mezcla 1: verde inmersivo con foto de fondo, eyebrow dorado
+  selva: {
+    heroStyle:"image", heroBg:"#465241",
+    heroOverlay:"linear-gradient(rgba(35,47,38,.78),rgba(35,47,38,.88))",
+    heroText:"#ffffff", heroSubdued:"rgba(255,255,255,.85)", heroBullets:"rgba(255,255,255,.9)",
+    eyebrow:"#CF8543", accent:"#CF8543", accentD:"#b7743a",
+    formBtn:"#65713F", formBtnHover:"#465241",
+    trustBg:"#465241", trustNum:"#CF8543", trustLbl:"rgba(255,255,255,.85)",
+    testiBg:"#F8F5EF", testiEy:"#CF8543", testiTitle:"#465241",
+    devBg:"#ECE5D8", devEy:"#CF8543", devTitle:"#465241",
+    closingBg:"#465241", closingText:"#ffffff", closingCta:"#CF8543", closingCtaHover:"#D9B37E",
+    footerBg:"#1F2A22", footerText:"rgba(255,255,255,.6)",
+    swatch:"#465241", logoLight:true
+  },
+  // Mezcla 2: hero claro crema con overlay suave, verde para acentos
+  arena: {
+    heroStyle:"light", heroBg:"#ECE5D8",
+    heroOverlay:"linear-gradient(rgba(236,229,216,.55),rgba(236,229,216,.75))",
+    heroText:"#2b2b26", heroSubdued:"#4a4a42", heroBullets:"#3f3f38",
+    eyebrow:"#65713F", accent:"#65713F", accentD:"#465241",
+    formBtn:"#465241", formBtnHover:"#38412f",
+    trustBg:"#65713F", trustNum:"#F8F5EF", trustLbl:"rgba(255,255,255,.85)",
+    testiBg:"#F8F5EF", testiEy:"#65713F", testiTitle:"#465241",
+    devBg:"#ECE5D8", devEy:"#65713F", devTitle:"#465241",
+    closingBg:"#65713F", closingText:"#ffffff", closingCta:"#F8F5EF", closingCtaHover:"#ffffff",
+    closingCtaColor:"#465241",
+    footerBg:"#38412f", footerText:"rgba(255,255,255,.65)",
+    swatch:"#ECE5D8", logoLight:false, centered:true
+  },
+  // Mezcla 3: hero olivo sólido con overlay, acentos dorados
+  bosque: {
+    heroStyle:"solid", heroBg:"#65713F",
+    heroOverlay:"linear-gradient(rgba(56,65,47,.35),rgba(56,65,47,.55))",
+    heroText:"#ffffff", heroSubdued:"rgba(255,255,255,.9)", heroBullets:"rgba(255,255,255,.92)",
+    eyebrow:"#D9B37E", accent:"#CF8543", accentD:"#b7743a",
+    formBtn:"#CF8543", formBtnHover:"#b7743a",
+    trustBg:"#38412f", trustNum:"#CF8543", trustLbl:"rgba(255,255,255,.85)",
+    testiBg:"#F8F5EF", testiEy:"#CF8543", testiTitle:"#38412f",
+    devBg:"#ECE5D8", devEy:"#CF8543", devTitle:"#38412f",
+    closingBg:"#38412f", closingText:"#ffffff", closingCta:"#CF8543", closingCtaHover:"#D9B37E",
+    footerBg:"#1F2A22", footerText:"rgba(255,255,255,.6)",
+    swatch:"#65713F", logoLight:true, formLeft:true
+  }
+};
+
+const TEMPLATES = {
+  // Distribución 1: split-right (copy izq + form der), paleta selva
+  selva: {
+    name:"Selva",
+    desc:"Copy izq · form der · verde con foto",
+    palette:"selva", layout:"split-right",
+    eyebrow:"INVERSIÓN PATRIMONIAL EN TULUM",
+    title:"Tu patrimonio, con los pies en la selva.",
+    sub:"Terrenos privados frente a cenotes, desde $150,000 USD. Solo quedan 5 en Suspiro.",
+    bullets:[
+      "Lotes de 900 m² (9,700 sq ft) — espacio para casa, jardín y privacidad",
+      "Plusvalía sostenida en una de las zonas más cotizadas de Tulum",
+      "Tierra frente a cenotes: activo que no se fabrica",
+      "Escritura pública garantizada"
+    ],
+    cta:"Ver terrenos disponibles"
+  },
+  // Distribución 2: centered (todo centrado), paleta arena
+  arena: {
+    name:"Arena Clara",
+    desc:"Centrado · crema claro · verde para acentos",
+    palette:"arena", layout:"centered",
+    eyebrow:"PLAN DE PAGOS DIRECTO CON EL DESARROLLADOR",
+    title:"Tu terreno en Tulum, a 48 mensualidades.",
+    sub:"Págalo a plazos directamente con nosotros, sin intereses, sin bancos y sin trámites de crédito. Desde $70,000 USD.",
+    bullets:[
+      "Pagas directo con el desarrollador · sin bancos · sin créditos",
+      "48 mensualidades · 0% interés · enganche desde 20%",
+      "Escritura pública garantizada al término"
+    ],
+    cta:"Ver disponibilidad y precios"
+  },
+  // Distribución 3: split-left (form izq + copy der), paleta bosque
+  bosque: {
+    name:"Bosque",
+    desc:"Form izq · copy der · olivo con dorado",
+    palette:"bosque", layout:"split-left",
+    eyebrow:"INVERSIÓN RESPALDADA",
+    title:"Terrenos residenciales con certeza jurídica completa",
+    sub:"Desarrollador con 12 proyectos entregados. No es una promesa, es un track record.",
+    bullets:[
+      "20+ años en bienes raíces en la Riviera Maya",
+      "12 proyectos entregados · 100% escrituras",
+      "Fideicomiso bancario para compradores extranjeros"
+    ],
+    cta:"Ver disponibilidad y precios"
+  }
 };
 
 const FIXED = {
   phone: "+52 999 489 0828",
-  formTitle: "Te llamamos en menos de 24 horas con precios y plan de pagos.",
-  formFields: ["NOMBRE *","APELLIDO *","TELÉFONO *","EMAIL *"],
-  formNote: "Al enviar aceptas que un asesor de Selvadentro te contacte. No compartimos tus datos.",
-  stats: [{n:"20+", l:"AÑOS EN BIENES RAÍCES"},{n:"12", l:"PROYECTOS ENTREGADOS"},{n:"100%", l:"ESCRITURAS"}],
+  formTitle: "Ver disponibilidad",
+  formSubtitle: "Te llamamos en menos de 24 horas con precios y plan de pagos.",
+  budgetPlaceholder: "Selecciona un rango",
+  budgetOptions: ["Menos de $1,500,000 MXN","$1,500,000 - $2,500,000 MXN","$2,500,000 - $5,000,000 MXN","Más de $5,000,000 MXN"],
+  timelinePlaceholder: "Selecciona un plazo",
+  timelineOptions: ["Inmediatamente","1-3 meses","3-6 meses","6-12 meses","Solo investigando"],
+  consent: "Al enviar aceptas que un asesor de Selvadentro te contacte. No compartimos tus datos.",
+  trustYears: "años en bienes raíces",
+  trustProjects: "proyectos entregados",
+  trustDeeded: "escrituras",
   testiEyebrow: "INVERSIONISTAS SELVADENTRO",
   testiTitle: "Otros ya tomaron la decisión",
-  testimonials: [
-    {q:"La seguridad que sentí en el proyecto y la experiencia de recorrer Selvadentro hicieron que tomara la decisión.", a:"Ricardo Garza", img:A+"/testimonials/ricardo-garza.webp"},
-    {q:"In a world moving too fast, Selvadentro Tulum feels like peace built into the jungle.", a:"Shawn", img:A+"/testimonials/shawn.webp"}
-  ],
-  trackEyebrow: "QUIÉN ESTÁ DETRÁS",
-  trackTitle: "Más de 20 años entregando comunidades en el sureste mexicano",
-  trackText: "Nuestro portafolio incluye Aldea Zama en Tulum y el Yucatán Country Club en Mérida — comunidades que hoy son referencia en plusvalía y entrega. Cuando inviertes con Selvadentro, inviertes con un track record real, no con una promesa.",
-  projectsEyebrow: "PROYECTOS DE REFERENCIA",
-  projects: [{n:"Aldea Zama", city:"TULUM"},{n:"Yucatán Country Club", city:"MÉRIDA"}],
-  finalTitle: "¿Listo para asegurar tu lote?",
-  finalSub: "Solo quedan 8 lotes al precio de hoy. Cada 10 lotes vendidos, el precio sube 1%.",
-  finalCta: "Ver disponibilidad y precios",
-  footerCopy: "© 2026 Selvadentro Tulum · Todos los derechos reservados",
-  footerContact: "+52 999 489 0828 · info@selvadentrotulum.com"
+  devEyebrow: "QUIÉN ESTÁ DETRÁS",
+  devTitle: "Más de 20 años entregando comunidades en el sureste mexicano",
+  devBody: "Nuestro portafolio incluye Aldea Zama en Tulum y el Yucatán Country Club en Mérida — comunidades que hoy son referencia en plusvalía y entrega. Cuando inviertes con Selvadentro, inviertes con un track record real, no con una promesa.",
+  devProjectsLabel: "PROYECTOS DE REFERENCIA",
+  closingTitle: "¿Listo para asegurar tu lote?",
+  closingBody: "Solo quedan 8 lotes al precio de hoy. Cada 10 lotes vendidos, el precio sube 1%.",
+  footerCopy: "Todos los derechos reservados",
+  footerEmail: "info@selvadentrotulum.com"
 };
 
-const TEMPLATES = {
-  // Distribución 1: copy a la izquierda + formulario a la derecha, hero verde con foto
-  selva: {name:"Selva", desc:"Copy izq · formulario der · verde con foto", layout:"split-right", palette:"selva",
-    eyebrow:"PLAN DE PAGOS DIRECTO CON EL DESARROLLADOR", title:"Tu terreno en Tulum, a 48 mensualidades.",
-    sub:"Págalo a plazos directamente con el desarrollador.", main:"Sin intereses, sin bancos y sin trámites de crédito. Desde $70,000 USD.",
-    bullets:["Pagas directo con el desarrollador · sin bancos · sin créditos","48 mensualidades · 0% interés · enganche desde 20%","Escritura pública garantizada al término"], cta:"Ver disponibilidad y precios"},
-  // Distribución 2: todo centrado, hero claro crema con bandas olivo
-  arena: {name:"Arena Clara", desc:"Centrado · crema claro · bandas olivo", layout:"centered", palette:"arena",
-    eyebrow:"SELVADENTRO · TULUM", title:"Tu propio terreno en la selva de Tulum.",
-    sub:"Con cenotes naturales. Desde $70,000 USD.", main:"Financiamiento a 48 meses sin intereses en un desarrollo de baja densidad.",
-    bullets:["9 cenotes naturales · solo 35% edificable","+134% de apreciación confirmada","48 meses · 0% interés · escritura garantizada"], cta:"Ver disponibilidad y precios"},
-  // Distribución 3: formulario a la izquierda + copy a la derecha, hero olivo con dorado
-  bosque: {name:"Bosque", desc:"Formulario izq · copy der · olivo con dorado", layout:"split-left", palette:"bosque",
-    eyebrow:"INVERSIÓN RESPALDADA", title:"Terrenos residenciales con certeza jurídica completa",
-    sub:"12 proyectos entregados. No es una promesa, es un track record.", main:"Desarrollador con 20+ años en la Riviera Maya y fideicomiso bancario para compradores extranjeros.",
-    bullets:["20+ años en bienes raíces en la Riviera Maya","12 proyectos entregados · 100% escrituras","Fideicomiso bancario para compradores extranjeros"], cta:"Ver disponibilidad y precios"}
-};
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function checkSvg(color){return `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>`;}
 
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function buildLP(d){
   const p = PALETTES[d.palette] || PALETTES.selva;
-  const light = p.heroStyle === "light";
-  const vars = `--bg:${p.statBg};--dark:${p.dark};--accent:${p.accent};--accentD:${p.accentD};--cream:${p.cream};--beige:${p.beige};--ink:${p.ink};--muted:${p.muted};--eyebrow:${p.eyebrow}`;
+  const layout = d.layout || "split-right";
+  const bullets = (d.bullets||[]).map(b=>`<li>${checkSvg(p.accent)}<span>${esc(b)}</span></li>`).join('');
+  const budgetOpts = FIXED.budgetOptions.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('');
+  const timelineOpts = FIXED.timelineOptions.map(o=>`<option value="${esc(o)}">${esc(o)}</option>`).join('');
+  const year = new Date().getFullYear();
+
+  // Hero background per palette
   const heroBg = p.heroStyle==="image"
-    ? `background:linear-gradient(${p.overlay},${p.overlay}),url('${HERO_IMG}');background-size:cover;background-position:center`
+    ? `background-image:${p.heroOverlay},url('${HERO_IMG}');background-size:cover;background-position:center`
     : p.heroStyle==="solid"
-      ? `background:linear-gradient(${p.overlay},${p.overlay}),${p.heroBg}`
-      : `background:${p.heroBg}`;
-  const bullets = (d.bullets||[]).map(b=>`<li>${esc(b)}</li>`).join('');
-  const fields = FIXED.formFields.map(f=>`<label class="ff">${esc(f)}<input type="text"></label>`).join('');
-  const stats = FIXED.stats.map(s=>`<div class="stat"><div class="s-n">${esc(s.n)}</div><div class="s-l">${esc(s.l)}</div></div>`).join('');
-  const testis = FIXED.testimonials.map(t=>`<figure class="tcard"><img class="t-av" src="${t.img}" alt="${esc(t.a)}" onerror="this.style.display='none'"><blockquote>“${esc(t.q)}”</blockquote><figcaption>${esc(t.a)}</figcaption></figure>`).join('');
-  const projects = FIXED.projects.map(pr=>`<div class="proj"><div class="p-n">${esc(pr.n)}</div><div class="p-c">${esc(pr.city)}</div></div>`).join('');
-  const heroClass = `hero ${d.layout}${light?' light':''}`;
-  const logoEl = light
-    ? `<span class="logo-fallback">SELVADENTRO</span>`
-    : `<img src="${LOGO}" alt="Selvadentro Tulum" onerror="this.outerHTML='&lt;span class=\\'logo-fallback\\'&gt;SELVADENTRO&lt;/span&gt;'">`;
-  const subEl = d.sub ? `<p class="subtitle">${esc(d.sub)}</p>` : '';
+      ? `background-image:${p.heroOverlay};background-color:${p.heroBg}`
+      : `background-image:${p.heroOverlay},url('${HERO_IMG}');background-size:cover;background-position:center;background-color:${p.heroBg}`;
+
+  // Logo variant (light on dark hero, dark fallback on light hero)
+  const logoEl = p.logoLight
+    ? `<img src="${LOGO}" alt="Selvadentro Tulum" onerror="this.outerHTML='&lt;span class=\\'logo-fb\\'&gt;Selvadentro&lt;small&gt;tierra de cenotes&lt;/small&gt;&lt;/span&gt;'">`
+    : `<span class="logo-fb dark">Selvadentro<small>tierra de cenotes</small></span>`;
+
+  // Hero header text color
+  const headerTextClass = p.logoLight ? '' : 'dark';
+
+  const langToggle = `<a href="#" class="lang-toggle ${headerTextClass}" title="Switch to EN">ES · <span class="alt">EN</span></a>`;
+
+  // CTA anchor styling
+  const heroCtaStyle = `background:${p.accent};color:#fff`;
+  const heroCtaHover = `background:${p.accentD}`;
+
+  // Grid classes per layout
+  let gridStyle = "";
+  let copyOrder = 1, formOrder = 2;
+  if(layout==="split-right"){ gridStyle = "grid-template-columns:1fr;"; }
+  if(layout==="split-left"){ gridStyle = "grid-template-columns:1fr;"; copyOrder = 2; formOrder = 1; }
+  if(layout==="centered"){ gridStyle = "grid-template-columns:1fr;justify-items:center;text-align:center;"; }
+
+  // Media desktop grid
+  let mediaGrid = "";
+  if(layout==="split-right") mediaGrid = "grid-template-columns:3fr 2fr;text-align:left;justify-items:stretch;";
+  if(layout==="split-left")  mediaGrid = "grid-template-columns:2fr 3fr;text-align:left;justify-items:stretch;";
+  if(layout==="centered")    mediaGrid = "grid-template-columns:1fr;max-width:820px;margin:0 auto;text-align:center;justify-items:center;";
+
   return `<!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>${esc(d.title)} | Selvadentro Tulum</title>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&family=Cardo:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;${vars}}
+:root{color-scheme:light;--dark-green:#465241;--olive:#65713F;--copper:#CF8543;--beige:#D9B37E;--cream:#F8F5EF;--sand:#ECE5D8;--ink:#2b2b26;--stone:#57534e}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--cream);line-height:1.55}
+html,body{scroll-behavior:smooth}
+body{font-family:'Lexend',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--ink);background:var(--sand);line-height:1.55}
 img{max-width:100%;display:block}
-.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-a{text-decoration:none}
-.btn-cta{display:inline-block;background:var(--accent);color:#fff;font-weight:600;font-size:16px;padding:16px 28px;border-radius:9999px;transition:.15s;border:none;cursor:pointer;text-align:center}
-.btn-cta:hover{background:var(--accentD)}
-.logo-fallback{font-weight:700;letter-spacing:1px;font-size:18px;color:inherit}
-header{position:absolute;top:0;left:0;right:0;z-index:5}
-.hdr{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;max-width:1180px;margin:0 auto;color:var(--cream)}
-.hdr.dark{color:var(--ink)}
-.hdr img{height:40px;width:auto}
-.hdr .r{display:flex;align-items:center;gap:22px;font-size:14px;font-weight:500}
-.hdr .lang{opacity:.85;letter-spacing:.5px}
-.hero{position:relative;color:var(--cream);padding:130px 0 80px}
-.hero.light{color:var(--ink)}
-.hero-grid{position:relative;display:grid;gap:56px;align-items:center;grid-template-columns:1.1fr .9fr}
-.hero.split-left .hero-grid{grid-template-columns:.9fr 1.1fr}
-.hero.split-left .hero-copy{order:2}
-.hero.split-left .formcard{order:1}
-.hero.centered .hero-grid{grid-template-columns:1fr;justify-items:center;text-align:center;max-width:820px;margin:0 auto}
-.hero.centered .hero-copy{max-width:760px}
-.hero.centered .formcard{max-width:520px;width:100%;text-align:left}
-.hero.centered ul{align-items:center}
-.eyebrow{font-size:12px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--eyebrow);margin-bottom:16px}
-.hero h1{font-size:47px;line-height:1.08;font-weight:700;letter-spacing:-.6px;margin-bottom:16px}
-.hero .subtitle{font-size:21px;font-weight:500;margin-bottom:12px;opacity:.96;max-width:560px}
-.hero.centered .subtitle,.hero.centered .main{max-width:640px;margin-left:auto;margin-right:auto}
-.hero .main{font-size:17px;font-weight:300;color:#e8e4d8;margin-bottom:28px;max-width:540px}
-.hero.light .main{color:#4a4a42}
-.hero ul{list-style:none;margin-bottom:32px;display:flex;flex-direction:column;gap:13px}
-.hero ul li{position:relative;padding-left:30px;font-size:15.5px;color:#ece6da}
-.hero.light ul li{color:#3f3f38}
-.hero ul li::before{content:"✓";position:absolute;left:0;top:0;color:var(--accent);font-weight:700}
-.formcard{background:#fff;color:var(--ink);border-radius:18px;padding:30px;box-shadow:0 26px 70px rgba(0,0,0,.30);text-align:left}
-.formcard h3{font-size:17px;font-weight:600;line-height:1.35;margin-bottom:20px;color:var(--dark)}
-.ff{display:block;font-size:11px;font-weight:600;letter-spacing:.8px;color:var(--muted);margin-bottom:14px}
-.ff input{display:block;width:100%;margin-top:6px;padding:12px 13px;border:1px solid #dfd9cc;border-radius:10px;background:#fbfaf7;font-family:inherit;font-size:14px}
-.ff input:focus{outline:none;border-color:var(--accent)}
-.formcard .btn-cta{width:100%;margin-top:8px}
-.formcard .note{font-size:11px;color:var(--muted);margin-top:15px;line-height:1.5}
-.stats{background:var(--bg);color:var(--cream)}
-.stats .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:52px 28px;text-align:center}
-.s-n{font-size:44px;font-weight:700;color:#fff;line-height:1}
-.s-l{font-size:11.5px;font-weight:600;letter-spacing:1.6px;margin-top:10px;color:rgba(255,255,255,.72)}
-.testi{background:var(--cream);padding:80px 0}
-.ey2{font-size:12px;font-weight:600;letter-spacing:2.2px;text-transform:uppercase;color:var(--accent);text-align:center;margin-bottom:12px}
-.h2{font-size:34px;font-weight:700;text-align:center;color:var(--dark);letter-spacing:-.4px}
-.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:48px}
-.tcard{background:#fff;border:1px solid #e4ddce;border-radius:16px;padding:30px;text-align:center}
-.tcard .t-av{width:74px;height:74px;border-radius:50%;object-fit:cover;margin:0 auto 18px;border:3px solid var(--beige)}
-.tcard blockquote{font-size:16px;font-style:italic;color:#40453b;line-height:1.6}
-.tcard figcaption{margin-top:16px;font-weight:600;color:var(--bg)}
-.track{background:var(--beige);padding:80px 0}
-.track .ey2,.track .h2{text-align:left}
-.track .h2{max-width:820px;margin-bottom:18px}
-.track p{font-size:18px;color:#524f45;max-width:820px;margin-bottom:36px}
-.proj-label{font-size:11px;font-weight:600;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:16px}
-.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:660px}
-.proj{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:14px;padding:22px 24px}
-.p-n{font-size:20px;font-weight:700;color:var(--dark)}
-.p-c{font-size:11px;font-weight:600;letter-spacing:1.6px;color:var(--accent);margin-top:6px}
-.final{background:var(--bg);color:var(--cream);padding:76px 0;text-align:center}
-.final h2{font-size:34px;font-weight:700;margin-bottom:14px}
-.final p{font-size:16px;color:rgba(255,255,255,.8);margin-bottom:28px}
-footer{background:var(--dark);color:rgba(255,255,255,.62);text-align:center;padding:30px;font-size:13px;line-height:1.8}
-@media(max-width:860px){
- .hero-grid,.tgrid,.proj-grid{grid-template-columns:1fr!important}
- .hero-copy{order:1!important}.formcard{order:2!important}
- .hero{padding:110px 0 56px}.hero h1{font-size:33px}
- .stats .wrap{grid-template-columns:1fr;gap:30px}.hdr .lang{display:none}
-}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:80rem;margin:0 auto;padding:0 1rem}
+@media(min-width:640px){.wrap{padding:0 1.5rem}}
+@media(min-width:1024px){.wrap{padding:0 2.5rem}}
+
+/* HEADER */
+header{position:absolute;top:0;left:0;right:0;z-index:30;padding:1rem}
+@media(min-width:640px){header{padding:1rem 1.5rem}}
+@media(min-width:1024px){header{padding:1rem 2.5rem}}
+.hdr{max-width:80rem;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.hdr .logo img{height:2.5rem;width:auto}
+@media(min-width:640px){.hdr .logo img{height:3rem}}
+.hdr .r{display:flex;align-items:center;gap:.75rem}
+@media(min-width:640px){.hdr .r{gap:1.25rem}}
+.lang-toggle{font-size:11px;font-weight:600;letter-spacing:.15em;color:rgba(255,255,255,.75);padding:0 .5rem;transition:.15s}
+.lang-toggle.dark{color:rgba(43,43,38,.7)}
+.lang-toggle:hover{color:#fff}
+.lang-toggle.dark:hover{color:#000}
+.lang-toggle .alt{color:${p.accent};text-decoration:underline}
+.hdr-phone{display:none;color:rgba(255,255,255,.85);font-size:14px;transition:.15s}
+.hdr-phone.dark{color:rgba(43,43,38,.85)}
+@media(min-width:640px){.hdr-phone{display:inline-block}}
+.logo-fb{font-family:'Cardo',Georgia,serif;font-size:20px;color:#fff;display:inline-block;letter-spacing:.02em}
+.logo-fb.dark{color:${p.eyebrow}}
+.logo-fb small{display:block;font-family:'Lexend',sans-serif;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);margin-top:-2px}
+.logo-fb.dark small{color:rgba(43,43,38,.6)}
+
+/* HERO */
+.hero{position:relative;padding:6rem 1rem 4rem;overflow:hidden;${heroBg}}
+@media(min-width:640px){.hero{padding:7rem 1.5rem 5rem}}
+@media(min-width:1024px){.hero{padding:7rem 2.5rem 5rem}}
+.hero-wrap{position:relative;max-width:80rem;margin:0 auto}
+.hero-grid{display:grid;gap:2.5rem;align-items:start;${gridStyle}}
+@media(min-width:1024px){.hero-grid{${mediaGrid}gap:3rem}}
+.hero-copy{color:${p.heroText};order:${copyOrder}}
+.hero-form-slot{order:${formOrder}}
+.eyebrow{display:inline-block;color:${p.eyebrow};font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem}
+@media(min-width:640px){.eyebrow{font-size:14px}}
+.hero h1{font-family:'Cardo',Georgia,serif;font-weight:700;line-height:1.05;color:${p.heroText};margin-bottom:1.25rem;font-size:clamp(2rem,5vw,3.4rem)}
+.hero .subhead{font-size:16px;line-height:1.7;color:${p.heroSubdued};margin-bottom:2rem;max-width:42rem}
+@media(min-width:640px){.hero .subhead{font-size:18px}}
+${layout==='centered' ? '.hero .subhead{margin-left:auto;margin-right:auto}' : ''}
+.vsl-wrap{margin-bottom:2rem;max-width:42rem;position:relative;padding-top:56.25%;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 25px 50px -12px rgba(0,0,0,.4)}
+${layout==='centered' ? '.vsl-wrap{margin-left:auto;margin-right:auto}' : ''}
+.vsl-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.hero ul{list-style:none;max-width:38rem;display:flex;flex-direction:column;gap:.625rem}
+${layout==='centered' ? '.hero ul{margin-left:auto;margin-right:auto;text-align:left}' : ''}
+.hero ul li{display:flex;align-items:flex-start;gap:.75rem;color:${p.heroBullets};font-size:14px;line-height:1.55}
+@media(min-width:640px){.hero ul li{font-size:16px}}
+
+/* FORM */
+.formcard{background:rgba(255,255,255,.96);backdrop-filter:blur(4px);border-radius:1rem;padding:1.5rem;box-shadow:0 25px 50px -12px rgba(0,0,0,.35);text-align:left;width:100%}
+${layout==='centered' ? '.formcard{max-width:32rem;margin:0 auto}' : ''}
+@media(min-width:640px){.formcard{padding:2rem}}
+@media(min-width:1024px){${layout!=='centered' ? '.formcard{position:sticky;top:6rem}' : ''}}
+.formcard h3{font-family:'Cardo',Georgia,serif;font-size:1.5rem;font-weight:700;color:var(--dark-green);line-height:1.2;margin-bottom:.25rem}
+@media(min-width:640px){.formcard h3{font-size:1.875rem}}
+.formcard .form-sub{font-size:14px;color:var(--stone);margin-bottom:1.25rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.form-label{display:block;margin-bottom:.75rem}
+.form-label > span{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#44403c;margin-bottom:.25rem}
+.form-label > span .req{color:var(--copper)}
+.form-label input,.form-label select{width:100%;padding:.75rem 1rem;border:1px solid #d6d3d1;border-radius:.5rem;background:#fff;font-family:inherit;font-size:14px;color:var(--ink);transition:.15s;-webkit-appearance:none;appearance:none}
+.form-label input:focus,.form-label select:focus{outline:none;border-color:${p.formBtn};box-shadow:0 0 0 3px ${p.formBtn}26}
+.form-label select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23737373'><path fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z' clip-rule='evenodd'/></svg>");background-repeat:no-repeat;background-position:right 1rem center;background-size:1rem;padding-right:2.5rem}
+.phone-shell{display:flex;align-items:center;gap:.5rem;padding:0 .75rem;border:1px solid #d6d3d1;border-radius:.5rem;background:#fff}
+.phone-shell:focus-within{border-color:${p.formBtn};box-shadow:0 0 0 3px ${p.formBtn}26}
+.phone-shell .flag{font-size:20px;line-height:1}
+.phone-shell select{border:0;background:transparent;padding:.5rem 0;font-size:14px;color:var(--stone);width:auto;background-image:none;padding-right:1rem}
+.phone-shell input{border:0;background:transparent;padding:.75rem 0;font-size:14px;flex:1;min-width:0}
+.phone-shell input:focus{box-shadow:none}
+.form-cta{margin-top:1.25rem;width:100%;padding:1rem 1.5rem;background:${p.formBtn};color:#fff;border:0;border-radius:9999px;font-weight:600;font-size:16px;transition:.2s;box-shadow:0 10px 15px -3px rgba(0,0,0,.15)}
+.form-cta:hover{background:${p.formBtnHover};box-shadow:0 10px 30px -8px ${p.formBtn}66}
+.form-consent{margin-top:.75rem;font-size:11px;color:var(--stone);text-align:center;line-height:1.5}
+
+/* TRUST STRIP */
+.trust{background:${p.trustBg};padding:1.5rem 1rem}
+.trust-inner{max-width:72rem;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.75rem 2rem;text-align:center}
+@media(min-width:640px){.trust-inner{gap:.75rem 3rem}}
+.trust-item{color:${p.trustLbl};white-space:nowrap}
+.trust-num{font-family:'Cardo',Georgia,serif;font-size:1.5rem;font-weight:700;color:${p.trustNum}}
+.trust-lbl{margin-left:.5rem;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+@media(min-width:640px){.trust-lbl{font-size:14px}}
+.trust-div{display:none;width:1px;height:2rem;background:rgba(255,255,255,.2)}
+@media(min-width:640px){.trust-div{display:block}}
+
+/* TESTIMONIALS */
+.testi{padding:4rem 1rem;background:${p.testiBg}}
+.testi-inner{max-width:64rem;margin:0 auto}
+.testi-head{text-align:center;margin-bottom:2.5rem}
+.testi-ey{color:${p.testiEy};font-size:14px;font-weight:600;letter-spacing:.15em;text-transform:uppercase}
+.testi-title{font-family:'Cardo',Georgia,serif;font-size:1.875rem;font-weight:700;color:${p.testiTitle};margin-top:.75rem}
+@media(min-width:640px){.testi-title{font-size:2.25rem}}
+.testi-grid{display:grid;grid-template-columns:1fr;gap:1.5rem}
+@media(min-width:768px){.testi-grid{grid-template-columns:1fr 1fr}}
+.testi-card{border-radius:1rem;overflow:hidden;background:#fff;border:1px solid #f5f5f4;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.testi-card img{width:100%;height:auto;display:block}
+
+/* DEV BLOCK */
+.dev{padding:3.5rem 1rem;background:${p.devBg}}
+@media(min-width:640px){.dev{padding:4rem 1.5rem}}
+.dev-inner{max-width:56rem;margin:0 auto;text-align:center}
+.dev-ey{display:inline-block;color:${p.devEy};font-size:12px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;margin-bottom:.75rem}
+@media(min-width:640px){.dev-ey{font-size:14px}}
+.dev-title{font-family:'Cardo',Georgia,serif;font-size:1.5rem;font-weight:700;color:${p.devTitle};line-height:1.2;margin-bottom:1rem}
+@media(min-width:640px){.dev-title{font-size:1.875rem}}
+@media(min-width:1024px){.dev-title{font-size:2.25rem}}
+.dev-logo{display:flex;justify-content:center;margin-bottom:1.5rem}
+.dev-logo img{height:4rem;width:auto}
+@media(min-width:640px){.dev-logo img{height:5rem}}
+.dev-body{color:#44403c;line-height:1.7;max-width:42rem;margin:0 auto 1.75rem;font-size:16px}
+@media(min-width:640px){.dev-body{font-size:18px}}
+.dev-projects{display:inline-flex;flex-direction:column;align-items:center;gap:1rem;padding:1rem 1.5rem;background:rgba(255,255,255,.7);border-radius:1rem;border:1px solid rgba(70,82,65,.1)}
+@media(min-width:640px){.dev-projects{flex-direction:row;gap:2rem}}
+.dev-proj-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.15em;color:rgba(70,82,65,.7)}
+.dev-proj-list{display:flex;align-items:center;gap:1.25rem}
+@media(min-width:640px){.dev-proj-list{gap:1.75rem}}
+.dev-proj{font-family:'Cardo',Georgia,serif;font-size:1rem;font-weight:700;color:${p.devTitle}}
+@media(min-width:640px){.dev-proj{font-size:1.125rem}}
+.dev-proj .city{display:block;font-family:'Lexend',sans-serif;font-size:11px;font-weight:400;text-transform:uppercase;letter-spacing:.05em;color:#78716c;margin-top:.125rem}
+.dev-proj-sep{width:1px;height:2rem;background:rgba(70,82,65,.2)}
+
+/* CLOSING */
+.closing{padding:4rem 1rem;background:${p.closingBg};text-align:center}
+.closing-inner{max-width:36rem;margin:0 auto;color:${p.closingText}}
+.closing h2{font-family:'Cardo',Georgia,serif;font-size:1.875rem;font-weight:700;margin-bottom:.75rem}
+@media(min-width:640px){.closing h2{font-size:2.25rem}}
+.closing p{color:${p.closingText};opacity:.85;margin-bottom:1.5rem}
+.closing-cta{display:inline-block;padding:1rem 2rem;background:${p.closingCta};color:${p.closingCtaColor||'#fff'};border-radius:9999px;font-weight:600;transition:.2s;box-shadow:0 25px 50px -12px rgba(0,0,0,.25)}
+.closing-cta:hover{background:${p.closingCtaHover};color:${p.closingCtaColor||'#465241'}}
+
+/* FOOTER */
+footer{background:${p.footerBg};color:${p.footerText};font-size:12px;padding:1.5rem 1rem}
+.foot-inner{max-width:72rem;margin:0 auto;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:.75rem;text-align:center}
+@media(min-width:640px){.foot-inner{flex-direction:row;text-align:left}}
+footer a{transition:.15s}
+footer a:hover{color:#fff}
+footer .sep{margin:0 .5rem}
 </style></head>
 <body>
-<header><div class="hdr${light?' dark':''}">
-  ${logoEl}
-  <div class="r"><span class="lang">ES · EN</span><span>${esc(FIXED.phone)}</span></div>
-</div></header>
-<section class="${heroClass}" style="${heroBg}"><div class="wrap"><div class="hero-grid">
-  <div class="hero-copy">
-    <div class="eyebrow">${esc(d.eyebrow)}</div>
-    <h1>${esc(d.title)}</h1>
-    ${subEl}
-    <p class="main">${esc(d.main)}</p>
-    <ul>${bullets}</ul>
-    <a href="#form" class="btn-cta">${esc(d.cta)}</a>
+<header>
+  <div class="hdr">
+    <a href="#top" class="logo" aria-label="Selvadentro">${logoEl}</a>
+    <div class="r">
+      ${langToggle}
+      <a href="tel:+529994890828" class="hdr-phone ${headerTextClass}">${esc(FIXED.phone)}</a>
+    </div>
   </div>
-  <div class="formcard" id="form">
-    <h3>${esc(FIXED.formTitle)}</h3>
-    ${fields}
-    <button class="btn-cta">${esc(d.cta)}</button>
-    <p class="note">${esc(FIXED.formNote)}</p>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-wrap">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">${esc(d.eyebrow)}</span>
+        <h1>${esc(d.title)}</h1>
+        <p class="subhead">${esc(d.sub)}</p>
+        <div class="vsl-wrap">
+          <iframe src="https://fast.wistia.net/embed/iframe/${WISTIA_ID}?videoFoam=true"
+            title="Selvadentro Tulum" allow="autoplay; fullscreen" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <ul>${bullets}</ul>
+      </div>
+      <div class="hero-form-slot">
+        <form class="formcard" onsubmit="event.preventDefault();alert('Configura tu webhook GHL en el atributo action del form.')">
+          <h3>${esc(FIXED.formTitle)}</h3>
+          <p class="form-sub">${esc(FIXED.formSubtitle)}</p>
+          <div class="form-row">
+            <label class="form-label"><span>Nombre <span class="req">*</span></span>
+              <input type="text" name="first_name" placeholder="Tu nombre" autocomplete="given-name" required>
+            </label>
+            <label class="form-label"><span>Apellido <span class="req">*</span></span>
+              <input type="text" name="last_name" placeholder="Tu apellido" autocomplete="family-name" required>
+            </label>
+          </div>
+          <label class="form-label"><span>Teléfono <span class="req">*</span></span>
+            <div class="phone-shell">
+              <span class="flag">🇲🇽</span>
+              <select name="country" aria-label="País">
+                <option value="+52" selected>+52</option>
+                <option value="+1">+1</option>
+                <option value="+34">+34</option>
+                <option value="+54">+54</option>
+                <option value="+57">+57</option>
+                <option value="+56">+56</option>
+              </select>
+              <input type="tel" name="phone" placeholder="999 489 0828" autocomplete="tel" required>
+            </div>
+          </label>
+          <label class="form-label"><span>Email <span class="req">*</span></span>
+            <input type="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
+          </label>
+          <label class="form-label"><span>Presupuesto <span class="req">*</span></span>
+            <select name="budget" required>
+              <option value="" disabled selected>${esc(FIXED.budgetPlaceholder)}</option>
+              ${budgetOpts}
+            </select>
+          </label>
+          <label class="form-label"><span>Plazo de inversión <span class="req">*</span></span>
+            <select name="timeline" required>
+              <option value="" disabled selected>${esc(FIXED.timelinePlaceholder)}</option>
+              ${timelineOpts}
+            </select>
+          </label>
+          <button type="submit" class="form-cta">${esc(d.cta)}</button>
+          <p class="form-consent">${esc(FIXED.consent)}</p>
+        </form>
+      </div>
+    </div>
   </div>
-</div></div></section>
-<section class="stats"><div class="wrap">${stats}</div></section>
-<section class="testi"><div class="wrap">
-  <div class="ey2">${esc(FIXED.testiEyebrow)}</div>
-  <h2 class="h2">${esc(FIXED.testiTitle)}</h2>
-  <div class="tgrid">${testis}</div>
-</div></section>
-<section class="track"><div class="wrap">
-  <div class="ey2">${esc(FIXED.trackEyebrow)}</div>
-  <h2 class="h2">${esc(FIXED.trackTitle)}</h2>
-  <p>${esc(FIXED.trackText)}</p>
-  <div class="proj-label">${esc(FIXED.projectsEyebrow)}</div>
-  <div class="proj-grid">${projects}</div>
-</div></section>
-<section class="final"><div class="wrap">
-  <h2>${esc(FIXED.finalTitle)}</h2>
-  <p>${esc(FIXED.finalSub)}</p>
-  <a href="#form" class="btn-cta">${esc(FIXED.finalCta)}</a>
-</div></section>
-<footer>${esc(FIXED.footerCopy)}<br>${esc(FIXED.footerContact)}</footer>
+</section>
+
+<section class="trust">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="trust-num">20+</span><span class="trust-lbl">${esc(FIXED.trustYears)}</span></div>
+    <div class="trust-div"></div>
+    <div class="trust-item"><span class="trust-num">12</span><span class="trust-lbl">${esc(FIXED.trustProjects)}</span></div>
+    <div class="trust-div"></div>
+    <div class="trust-item"><span class="trust-num">100%</span><span class="trust-lbl">${esc(FIXED.trustDeeded)}</span></div>
+  </div>
+</section>
+
+<section class="testi">
+  <div class="testi-inner">
+    <div class="testi-head">
+      <span class="testi-ey">${esc(FIXED.testiEyebrow)}</span>
+      <h2 class="testi-title">${esc(FIXED.testiTitle)}</h2>
+    </div>
+    <div class="testi-grid">
+      <figure class="testi-card"><img src="${TESTI_1}" alt="Testimonio Ricardo Garza" loading="lazy" onerror="this.parentElement.style.display='none'"></figure>
+      <figure class="testi-card"><img src="${TESTI_2}" alt="Testimonio Shawn" loading="lazy" onerror="this.parentElement.style.display='none'"></figure>
+    </div>
+  </div>
+</section>
+
+<section class="dev">
+  <div class="dev-inner">
+    <span class="dev-ey">${esc(FIXED.devEyebrow)}</span>
+    <h2 class="dev-title">${esc(FIXED.devTitle)}</h2>
+    <div class="dev-logo"><img src="${JJF_LOGO}" alt="JJF Creando" loading="lazy" onerror="this.parentElement.style.display='none'"></div>
+    <p class="dev-body">${esc(FIXED.devBody)}</p>
+    <div class="dev-projects">
+      <span class="dev-proj-lbl">${esc(FIXED.devProjectsLabel)}</span>
+      <div class="dev-proj-list">
+        <span class="dev-proj">Aldea Zama<span class="city">Tulum</span></span>
+        <span class="dev-proj-sep"></span>
+        <span class="dev-proj">Yucatán Country Club<span class="city">Mérida</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="closing-inner">
+    <h2>${esc(FIXED.closingTitle)}</h2>
+    <p>${esc(FIXED.closingBody)}</p>
+    <a href="#top" class="closing-cta">${esc(d.cta)}</a>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-inner">
+    <span>© ${year} Selvadentro Tulum · ${esc(FIXED.footerCopy)}</span>
+    <span><a href="tel:+529994890828">${esc(FIXED.phone)}</a><span class="sep">·</span><a href="mailto:${FIXED.footerEmail}">${esc(FIXED.footerEmail)}</a></span>
+  </div>
+</footer>
 </body></html>`;
 }
+
 let current = "selva";
 let edited = {};
 let lastVars = [];
@@ -361,17 +626,25 @@ let lastVars = [];
 function state(){
   const t = TEMPLATES[current];
   const e = edited[current] || {};
-  return {...t, title:e.title??t.title, sub:e.sub??t.sub, main:e.main??t.main};
+  return {
+    ...t,
+    eyebrow: e.eyebrow ?? t.eyebrow,
+    title: e.title ?? t.title,
+    sub: e.sub ?? t.sub,
+    bullets: e.bullets ?? t.bullets,
+    cta: e.cta ?? t.cta
+  };
 }
 
 function renderTemplateCards(){
   document.getElementById('tplGrid').innerHTML = Object.entries(TEMPLATES).map(([k,t])=>{
     const sw = PALETTES[t.palette].swatch;
-    const lay = t.layout==='split-right'?'Split ›':t.layout==='split-left'?'‹ Split':'Centrado';
+    const layoutLabel = t.layout==='split-right'?'Split ›':t.layout==='split-left'?'‹ Split':'Centrado';
     return `<div class="tpl ${k===current?'active':''}" onclick="selectTpl('${k}')">
       <div class="dot" style="background:${sw}"></div>
-      <div><div class="t-name">${t.name}</div><div class="t-desc">${t.desc}</div>
-      <div class="t-tags">${lay} · ${t.palette}${t.light?' · claro':''}</div></div>
+      <div><div class="t-name">${t.name}</div>
+      <div class="t-desc">${t.desc}</div>
+      <div class="t-tags">${layoutLabel} · ${t.palette}</div></div>
     </div>`;
   }).join('');
 }
@@ -380,27 +653,31 @@ function selectTpl(k){ current=k; renderTemplateCards(); syncInputs(); renderPre
 
 function syncInputs(){
   const s = state();
+  document.getElementById('inEyebrow').value = s.eyebrow;
   document.getElementById('inTitle').value = s.title;
   document.getElementById('inSub').value = s.sub;
-  document.getElementById('inMain').value = s.main;
+  document.getElementById('inBullets').value = (s.bullets||[]).join('\n');
+  document.getElementById('inCta').value = s.cta;
   updateCounts();
   document.getElementById('stTitle').textContent = "Vista previa — " + TEMPLATES[current].name;
 }
 
 function onEdit(){
   edited[current] = edited[current] || {};
+  edited[current].eyebrow = document.getElementById('inEyebrow').value;
   edited[current].title = document.getElementById('inTitle').value;
   edited[current].sub = document.getElementById('inSub').value;
-  edited[current].main = document.getElementById('inMain').value;
+  edited[current].bullets = document.getElementById('inBullets').value.split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4);
+  edited[current].cta = document.getElementById('inCta').value;
   updateCounts();
   renderPreview();
 }
 
 function updateCounts(){
   const g=id=>document.getElementById(id).value.length+" caracteres";
+  document.getElementById('cEyebrow').textContent=g('inEyebrow');
   document.getElementById('cTitle').textContent=g('inTitle');
   document.getElementById('cSub').textContent=g('inSub');
-  document.getElementById('cMain').textContent=g('inMain');
 }
 
 function renderPreview(){ document.getElementById('frame').srcdoc = buildLP(state()); }
@@ -427,20 +704,21 @@ async function generateAI(){
   msg.textContent=""; document.getElementById('vars').innerHTML='';
   const s = state();
   const prompt =
-`Eres copywriter senior de real estate. Desarrollo: Selvadentro Tulum, lotes residenciales en la selva de Tulum, plan de pagos directo con el desarrollador a 48 meses sin intereses, desde $70,000 USD, 9 cenotes naturales, escritura publica garantizada.
+`Eres copywriter senior de real estate. Desarrollo: Selvadentro Tulum, lotes residenciales en la selva de Tulum, 9 cenotes naturales, plan de pagos directo con el desarrollador a 48 meses sin intereses, desde $70,000 USD, escritura publica garantizada. La landing sigue el formato /premium: eyebrow corto en dorado + titulo largo Cardo serif + subhead + 3-4 bullets + CTA.
 
-Genera 5 variaciones del copy del HERO de una squeeze page, cada una con un TONO distinto y adaptado al PUBLICO META.
+Genera 5 variaciones del copy del HERO, cada una con un TONO distinto y adaptado al PUBLICO META.
 
 PUBLICO META: ${aud}
 
 Copy actual de referencia:
+- Eyebrow: ${s.eyebrow}
 - Titulo: ${s.title}
 - Subtitulo: ${s.sub}
-- Texto principal: ${s.main}
+- Bullets: ${(s.bullets||[]).join(' | ')}
 
-Reglas: espanol neutro, titulos de max ~60 caracteres, subtitulos cortos, texto principal de 1-2 frases. Ajusta tono y contenido al publico meta.
+Reglas: espanol neutro, eyebrow en MAYUSCULAS de max 45 caracteres, titulo max ~60 caracteres, subtitulo 1 frase de 15-25 palabras, 3-4 bullets cortos de 8-15 palabras cada uno. Ajusta tono y contenido al publico meta.
 
-Responde EXCLUSIVAMENTE con JSON valido (sin markdown, sin texto extra): un array de 5 objetos con las claves exactas: "tono", "titulo", "subtitulo", "principal".`;
+Responde EXCLUSIVAMENTE con JSON valido (sin markdown, sin texto extra): un array de 5 objetos con claves exactas: "tono", "eyebrow", "titulo", "subtitulo", "bullets" (bullets es array de strings).`;
   try{
     const res = await window.cowork.askClaude(prompt, []);
     let text = typeof res==='string' ? res : (res && (res.text || res.output || (res.content && res.content[0] && res.content[0].text))) || JSON.stringify(res);
@@ -458,21 +736,25 @@ Responde EXCLUSIVAMENTE con JSON valido (sin markdown, sin texto extra): un arra
 }
 
 function renderVariations(arr){
-  document.getElementById('vars').innerHTML = arr.map((v,i)=>`
-    <div class="var">
+  document.getElementById('vars').innerHTML = arr.map((v,i)=>{
+    const b = Array.isArray(v.bullets) ? v.bullets : [];
+    return `<div class="var">
       <span class="tone">${esc(v.tono||('Opción '+(i+1)))}</span>
+      <div style="font-size:10px;color:var(--gold);letter-spacing:.5px;margin-bottom:4px">${esc(v.eyebrow||'')}</div>
       <div class="v-t">${esc(v.titulo||'')}</div>
       <div class="v-s">${esc(v.subtitulo||'')}</div>
-      <div class="v-p">${esc(v.principal||'')}</div>
+      <div class="v-b">${b.map(x=>'• '+esc(x)).join('<br>')}</div>
       <button class="v-use" onclick="applyVar(${i})">Usar esta variación</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 function applyVar(i){
   const v = lastVars[i]; if(!v) return;
+  document.getElementById('inEyebrow').value = v.eyebrow||'';
   document.getElementById('inTitle').value = v.titulo||'';
   document.getElementById('inSub').value = v.subtitulo||'';
-  document.getElementById('inMain').value = v.principal||'';
+  document.getElementById('inBullets').value = (Array.isArray(v.bullets)?v.bullets:[]).join('\n');
   onEdit();
   toast("Variación aplicada");
 }
